@@ -1,8 +1,8 @@
 package config
 
 import (
-	_ "github.com/gorm/dialects/postgres"
 	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
 var (
