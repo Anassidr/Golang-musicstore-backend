@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"github.com/go-musicstore/pkg/controllers"
+	"github.com/anassidr/go-musicstore/pkg/controllers"
 	"github.com/gorilla/mux"
 )
 
