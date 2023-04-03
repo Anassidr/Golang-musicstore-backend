@@ -33,3 +33,27 @@ func init() {
 	db = config.GetDB()
 	db.AutoMigrate(&Instrument{}) //Automigrate expects a reference to a struct type
 }
+
+func (i *Instrument) CreateInstrument() *Instrument {
+	db.NewRecord(i)
+	db.Create(&i)
+	return i
+}
+
+func GetAllInstruments() []Instrument {
+	var Instruments []Instrument
+	db.Find(&Instruments)
+	return Instruments
+}
+
+func GetInstrumentById(Id int64) (*Instrument, *gorm.DB) {
+	var getInstrument Instrument
+	db := db.Where("ID=?", Id).Find(&getInstrument)
+	return &getInstrument, db
+}
+
+func DeleteInstrument(Id int64) Instrument {
+	var instrument Instrument
+	db.Where("ID=?", Id).Delete(instrument)
+	return instrument
+}
