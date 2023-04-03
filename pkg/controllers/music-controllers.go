@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"reflect"
 	"strconv"
 
 	"github.com/anassidr/go-musicstore/pkg/models"
@@ -61,5 +62,34 @@ func DeleteInstrument(w http.ResponseWriter, r *http.Request) {
 }
 
 func UpdateInstrument(w http.ResponseWriter, r *http.Request) {
+	var updateInstrument = &models.Instrument{}
+	utils.ParseBody(r, updateInstrument)
+	vars := mux.Vars(r)
+	instrumentId := vars["instrumentId"]
+	ID, err := strconv.ParseInt(instrumentId, 0, 0)
+	if err != nil {
+		fmt.Println("error while parsing")
+	}
 
+	instrumentDetails, db := models.GetInstrumentById(ID)
+
+	// reflection
+	elem := reflect.ValueOf(instrumentDetails).Elem()
+	update := reflect.ValueOf(updateInstrument).Elem()
+
+	for i := 0; i < elem.NumField(); i++ {
+		field := elem.Field(i)
+		if field.CanSet() {
+			updateField := update.Field(i)
+			if !updateField.IsZero() {
+				field.Set(updateField)
+			}
+		}
+	}
+
+	db.Save(&instrumentDetails)
+	res, _ := json.Marshal(instrumentDetails)
+	w.Header().Set("Content-Type", "pkglication/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(res)
 }
