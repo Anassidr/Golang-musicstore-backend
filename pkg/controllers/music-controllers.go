@@ -15,9 +15,9 @@ import (
 var NewInstrument models.Instrument
 
 func GetInstrument(w http.ResponseWriter, r *http.Request) {
-	newInstruments := models.GetAllInstruments()
+	newInstruments := models.GetAll(models.Instrument{})
 	res, _ := json.Marshal(newInstruments)
-	w.Header().Set("Content-Type", "pkglication/json")
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	w.Write(res)
 
@@ -32,7 +32,7 @@ func GetInstrumentById(w http.ResponseWriter, r *http.Request) {
 	}
 	instrumentDetails, _ := models.GetInstrumentById(ID)
 	res, _ := json.Marshal(instrumentDetails)
-	w.Header().Set("Content-Type", "pkglication/json")
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	w.Write(res)
 }
@@ -56,7 +56,7 @@ func DeleteInstrument(w http.ResponseWriter, r *http.Request) {
 	}
 	instrument := models.DeleteInstrument(ID)
 	res, _ := json.Marshal(instrument)
-	w.Header().Set("Content-Type", "pkglication/json")
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	w.Write(res)
 }
@@ -89,7 +89,7 @@ func UpdateInstrument(w http.ResponseWriter, r *http.Request) {
 
 	db.Save(&instrumentDetails)
 	res, _ := json.Marshal(instrumentDetails)
-	w.Header().Set("Content-Type", "pkglication/json")
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	w.Write(res)
 }

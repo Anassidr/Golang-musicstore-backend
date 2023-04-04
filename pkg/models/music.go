@@ -1,6 +1,8 @@
 package models
 
 import (
+	"reflect"
+
 	"github.com/anassidr/go-musicstore/pkg/config"
 	"github.com/asaskevich/govalidator"
 	"github.com/jinzhu/gorm"
@@ -41,6 +43,12 @@ func (i *Instrument) CreateInstrument() *Instrument {
 	return i
 }
 
+func GetAll(modelType interface{}) interface{} {
+	result := reflect.New(reflect.SliceOf(reflect.TypeOf(modelType))).Interface()
+	db.Find(result)
+	return result
+}
+
 func GetAllInstruments() []Instrument {
 	var Instruments []Instrument
 	db.Find(&Instruments)
@@ -72,7 +80,7 @@ type User struct {
 }
 
 func (u *User) SetPassword(password string) error {
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost) //[]byte(password) converts the password to a slice of bytes
 	if err != nil {
 		return err
 	}
@@ -83,4 +91,11 @@ func (u *User) SetPassword(password string) error {
 func (u *User) CheckPassword(password string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(u.PasswordHash), []byte(password))
 	return err == nil
+}
+
+type Order struct {
+	Order_number  string `json:"order_name" valid:"required"`
+	Customer_ID   string `json:"customer_id" valid:"required"`
+	Instrument_ID string `json:"instrument_id" valid:"required"`
+	Status        string `json:"status" valid:"required"`
 }
